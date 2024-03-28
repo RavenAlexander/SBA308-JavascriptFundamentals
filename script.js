@@ -105,7 +105,6 @@ const CourseInfo = {
 
     let seenLearnerIds = []; // This creates a new array of learner ids that keep track of if the learner id has been stored into the result array
     let result = []; // This creates a new array of results with all learner data
-    let i = 0;
 
     for (const s of submissions) { //For every iteration of submissions
       if (seenLearnerIds.includes(s.learner_id)) { // If seenLearner_ids does not include the learner id of the current iteration...
@@ -125,6 +124,9 @@ const CourseInfo = {
             continue;
           } else {
             const assignment = filteredAssignments[0]
+            //You should also account for potential errors in the data that your program receives. What if points_possible is 0? You cannot divide by zero. What if a value that you are expecting to be a number is instead a string? 
+    // // Use try/catch and other logic to handle these types of errors gracefully.
+    //     
             if (assignment.points_possible <= 0) {
               console.error("Skipping assignment " + assignment.id + " which has invalid possible points: " + assignment.points_possible);
               continue;
@@ -141,12 +143,12 @@ const CourseInfo = {
 
             totalScore += score;  //Add the iteration of "fs" of "submission score" to the Total Score variable
             totalPossibleScore += assignment.points_possible; // Add the number of points possible to the Total Possible Score variable
-            currentStudent [fs.assignment_id] = score / assignment.points_possible; //help explain this. why does currentStudent change. It takes a value from "submissions" and manipulates it but I don't know how this is added to the original variable
+            currentStudent [fs.assignment_id] = score / assignment.points_possible; // This adds the property fs.assignment_id to the currentStudent object now that we know the updated values of score and assignment.points_possible
           }
         }
-        currentStudent.avg = totalScore / totalPossibleScore; // "avg" stands for average, this calculates the learner's score from the total possible score. But I don't understand how this value is added to the original variable
-        result.push(currentStudent) // This adds the info of currentStudent to the result array
-        seenLearnerIds.push(s.learner_id); //This adds the info of each learner id into seenLearner_ids to mark it as "seen" so the same info doesn't get re-added over and over 
+        currentStudent.avg = totalScore / totalPossibleScore; // "avg" stands for average, this calculates the learner's score from the total possible score. The property "avg" is added to currentStudent (if it does not already exist)
+        result.push(currentStudent) // This adds all the info of currentStudent to the result array
+        seenLearnerIds.push(s.learner_id); //This adds all the info of each unique learner id into seenLearner_ids to mark it as "seen" so the same info doesn't get re-added over and over 
       }
     }
 
@@ -162,26 +164,8 @@ const CourseInfo = {
     // Utilize at least two different types of loops.
   
     // Demonstrate the retrieval, manipulation, and removal of items in an array or properties in an object.
-
-    //If an assignment is not yet due, do not include it in the results or the average.(skip past the iteration)
-    //     
-        
-    //     if (assignment_group.due_at > "2024-01-01") {
-    //         //skip it
-    //     } else {
-    //         console.log("excluded 1 submission not due");
-    //     }
     
-    
-    // //     You should also account for potential errors in the data that your program receives. What if points_possible is 0? You cannot divide by zero. What if a value that you are expecting to be a number is instead a string? 
-    // // Use try/catch and other logic to handle these types of errors gracefully.
-    //     try {
-    //         (filteredAssignments[0].points_possible == 0)
-    //     } catch (error) {
-    //         "Error! Cannot divide by zero"
-    //     }
-    
-
+// -------------
 
             //Example result provided by the assignment
         // const result = [
