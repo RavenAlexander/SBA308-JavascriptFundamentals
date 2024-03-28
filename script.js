@@ -1,16 +1,4 @@
-// // // // Employ basic JavaScript syntax accurately.
-// // // // Implement control flow structures such as conditionals and loops effectively.
-// // // // Use arrays and objects to organize and manage data.
-// // // // Develop functions to create reusable code.
-// // // // Utilize loops and iteration to navigate through data collections.
-// // // // Implement error handling to manage potential code failures gracefully.
-
-// // // You will create a script that gathers data, processes it, and then outputs a consistent result as
-// //  described by a specification. This is a very typical situation in industry, and this particular 
-// //  scenario has been modified from a real application. The data you will use is provided below.
-
-// Your goal is to analyze and transform this data such that the output of your program is an array
-//  of objects, each containing the following information in the following format:
+// Your goal is to analyze and transform this data such that the output of your program is an array of objects, each containing the following information in the following format:
 
 // The provided course information.
 const CourseInfo = {
@@ -90,24 +78,29 @@ const CourseInfo = {
     },
   ];
   
+  //This is where my code begins
+  const t = true;
+
+  do {
+    
+    console.log("Welcome! Here you will find information about Learners by their IDs.");
+  } while (!t); //This runs once and I'm ok with that.
 
   function getLearnerData(course, assignment_group, submissions) {
     
-    // here, we would process this data to achieve the desired result.
-    //This is where the assignment technically begins
-    //Use map and filter methods to iterate through AssignmentGroup and LearnerSubmissions for data
-    //create new arrays for data
-
-    //Check to see if AssignmentGroup matches course_id, if it doesn't, throw an error (if statement)
+    try { //This checks to see if assignment_group.course_id matches course.id, if it doesn't, it catches an error
     if (assignment_group.course_id !== course.id) {
-      throw error ("Error! Courses do not match");
+      throw error ("Error! Courses do not match");} }
+      catch (err) {
+        console.log(err);
     } 
+  
 
     let seenLearnerIds = []; // This creates a new array of learner ids that keep track of if the learner id has been stored into the result array
     let result = []; // This creates a new array of results with all learner data
 
-    for (const s of submissions) { //For every iteration of submissions
-      if (seenLearnerIds.includes(s.learner_id)) { // If seenLearner_ids does not include the learner id of the current iteration...
+    for (const s of submissions) { //For every current iteration of submissions
+      if (seenLearnerIds.includes(s.learner_id)) { // If seenLearner_ids includes the learner id of the current iteration...
         continue;
       } else {
         let currentStudent = { //create new variable object
@@ -117,27 +110,26 @@ const CourseInfo = {
         const filteredSubmissions = submissions.filter((x) => x.learner_id === s.learner_id); //This filters through learner submissions, it returns a subset of submissions where x.learner_id matches s.learner_id
         let totalPossibleScore = 0;
         let totalScore = 0; 
-        for (const fs of filteredSubmissions) { //for every iteration of "filteredSubmissions", we want to:
-          const filteredAssignments = assignment_group.assignments.filter((a) => a.id === fs.assignment_id) //create a new variable that filters the assignment group. Idk how to describe this
+        for (const fs of filteredSubmissions) { //for every current iteration of "filteredSubmissions", we want to:
+          const filteredAssignments = assignment_group.assignments.filter((a) => a.id === fs.assignment_id) //create a new variable that filters through the assignment id of assignment_group and saves it
           
-          if (filteredAssignments.length <= 0 || filteredAssignments[0].due_at >= "2024-03-26") {
-            continue;
+          if (filteredAssignments.length <= 0 || filteredAssignments[0].due_at >= "2024-03-26") { // If the length of filteredAssignments is less than or equal to 0, or if the assignment is due at a date later than March 26 2024...
+            continue; //skip that assignment
           } else {
-            const assignment = filteredAssignments[0]
-            //You should also account for potential errors in the data that your program receives. What if points_possible is 0? You cannot divide by zero. What if a value that you are expecting to be a number is instead a string? 
-    // // Use try/catch and other logic to handle these types of errors gracefully.
-    //     
+            const assignment = filteredAssignments[0] //create variable for assignment starting at the first index of filteredAssignments
+
+          // What if points_possible is 0?     
             if (assignment.points_possible <= 0) {
-              console.error("Skipping assignment " + assignment.id + " which has invalid possible points: " + assignment.points_possible);
+              console.error("Skipping assignment " + assignment.id + " which has invalid possible points: " + assignment.points_possible); //This will skip that assignment in such case
               continue;
             }
             if (assignment.id in currentStudent) {
-              console.error("Skipping assignment " + assignment.id + " as it was already processed");
+              console.error("Skipping assignment " + assignment.id + " as it was already processed"); // This prevents duplicate assignment ids to be added to the result array
               continue;
             }
-            let score = fs.submission.score; 
-            //if the learner's submission is late, 10% will be deducted from the score
-            if (assignment.due_at < fs.submission.submitted_at) {
+            let score = fs.submission.score;  // variable score keeps track of the submission score from the current iteration of "fs"
+          
+            if (assignment.due_at < fs.submission.submitted_at) { // if the learner's submission is late, 10% will be deducted from the score
               score -= 0.1 * assignment.points_possible;
             }
 
@@ -146,28 +138,23 @@ const CourseInfo = {
             currentStudent [fs.assignment_id] = score / assignment.points_possible; // This adds the property fs.assignment_id to the currentStudent object now that we know the updated values of score and assignment.points_possible
           }
         }
-        currentStudent.avg = totalScore / totalPossibleScore; // "avg" stands for average, this calculates the learner's score from the total possible score. The property "avg" is added to currentStudent (if it does not already exist)
+        currentStudent.avg = totalScore / totalPossibleScore; // "avg" stands for average, this divides the learner's score from the total possible score. The property "avg" is added to currentStudent (if it does not already exist)
         result.push(currentStudent) // This adds all the info of currentStudent to the result array
         seenLearnerIds.push(s.learner_id); //This adds all the info of each unique learner id into seenLearner_ids to mark it as "seen" so the same info doesn't get re-added over and over 
       }
     }
 
-    return result;
+    return result; // returns the data of result array, now that data has been added to it
   }
   
   const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
   
   console.log(result);
-  
-    //    To do:     
-    // Use strings, numbers, and Boolean values cached within variables
-    // Utilize at least two different types of loops.
-  
-    // Demonstrate the retrieval, manipulation, and removal of items in an array or properties in an object.
+
     
 // -------------
 
-            //Example result provided by the assignment
+            //Example result provided at the start
         // const result = [
         //   {
         //     id: 125,
